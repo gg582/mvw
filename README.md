@@ -36,7 +36,7 @@
 ### Interactive
 Default usage where you will get to experience the full experience of MVW. You will get to search, rate, review and also save your review. Every reviews will be saved in your local machine!
 
-![Interactive Command](https://raw.githubusercontent.com/fatinul/mvw/v1.1.0/demos/demo-interactive.gif)
+![Interactive Command](https://raw.githubusercontent.com/fatinul/mvw/v0.1.0/demos/demo-interactive.gif)
 
 ### List
 You will get to see every past reviews that you had done in a simple interface supported by [iterfzf](https://github.com/dahlia/iterfzf)) which uses the "__Fuzzy Search__"
