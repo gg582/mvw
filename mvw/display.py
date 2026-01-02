@@ -14,7 +14,11 @@ from .config import ConfigManager
 from .path import PathManager
 from .theme import Palette
 
-console = Console(force_terminal=True)
+import os
+import sys
+import io
+
+console = Console(force_terminal=True, width=95, soft_wrap=True, color_system="truecolor", legacy_windows=False)
 config_manager = ConfigManager()
 path = PathManager()
 moai = Moai()
@@ -45,67 +49,73 @@ class DisplayManager:
 
     def display_movie_info(self, star: float = 0.0, review_text: str = "Your review will show here."):
         """The Movie Review Card"""
-        current_term_width = console.width
-        poster_panel = self.poster_panel()
+        if sys.platform == "win32":
+            sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
         reviewer_name = config_manager.get_config("USER", "name")
         suffix = "'s" if reviewer_name else ""
 
-        review_header = Text.from_markup(f"[{str(palette.style.get('review_text', 'cyan'))} bold]󰭹 {reviewer_name.upper()}{suffix} REVIEW :[/] [{str(palette.style.get('imdb_gold', 'yellow'))}]{self.iconize_star(float(star))}[/]")
-        review = Text.from_markup(review_text if review_text != None else "Seems like something [italic]happened[/], Sorry for the inconvenience.", overflow="fold", justify="full", style=str(palette.style.get('text', 'white')))
-        gap = Text.from_markup(" ")
+        try:
+            current_term_width = console.width
+            poster_panel = self.poster_panel()
 
-        review_group = Group(
-            gap,
-            review_header,
-            review
-        )
+            review_header = Text.from_markup(f"[{str(palette.style.get('review_text', 'cyan'))} bold]󰭹 {reviewer_name.upper()}{suffix} REVIEW :[/] [{str(palette.style.get('imdb_gold', 'yellow'))}]{self.iconize_star(float(star))}[/]")
+            review = Text.from_markup(review_text if review_text != None else "Seems like something [italic]happened[/], Sorry for the inconvenience.", overflow="fold", justify="full", style=str(palette.style.get('text', 'white')))
+            gap = Text.from_markup(" ")
 
-        if config_manager.get_config("UI", "review") == "true":
-            right_group = Group(
-                self.movie_group(),
-                self.imdb_group(),
-                self.stats_group(),
-                review_group,
-            )
-        else:
-            right_group = Group(
-                self.movie_group(),
-                self.imdb_group(),
-                self.stats_group(),
+            review_group = Group(
+                gap,
+                review_header,
+                review
             )
 
+            if config_manager.get_config("UI", "review") == "true":
+                right_group = Group(
+                    self.movie_group(),
+                    self.imdb_group(),
+                    self.stats_group(),
+                    review_group,
+                )
+            else:
+                right_group = Group(
+                    self.movie_group(),
+                    self.imdb_group(),
+                    self.stats_group(),
+                )
 
-        if current_term_width < 70:
-            main_layout = Group(
-                Align.center(poster_panel),
-                Text(" "),
-                right_group
-            )
-        else:
-            body_table = Table.grid(padding=(0, 2))
 
-            body_table.add_column(width=self.poster_width) # Space for "Poster"
-            body_table.add_column()
-            body_table.add_row(poster_panel, right_group)
+            if current_term_width < 70:
+                main_layout = Group(
+                    Align.center(poster_panel),
+                    Text(" "),
+                    right_group
+                )
+            else:
+                body_table = Table.grid(padding=(0, 2))
 
-            # Combine everything into one main Panel
-            main_group = Table.grid(expand=True)
-            main_group.add_row(body_table)
+                body_table.add_column(width=self.poster_width) # Space for "Poster"
+                body_table.add_column()
+                body_table.add_row(poster_panel, right_group)
 
-            main_layout = Panel(
-                main_group,
+                # Combine everything into one main Panel
+                main_group = Table.grid(expand=True)
+                main_group.add_row(body_table)
+
+                main_layout = Panel(
+                    main_group,
+                    box=box.SIMPLE_HEAD,
+                    width=100
+                )
+
+            full_panel = Panel(
+                main_layout,
                 box=box.SIMPLE_HEAD,
-                width=100
+                width=min(100, current_term_width)
             )
 
-        full_panel = Panel(
-            main_layout,
-            box=box.SIMPLE_HEAD,
-            width=min(100, current_term_width)
-        )
-
-        console.print(full_panel)
+            console.print(full_panel)
+        except Exception:
+           print(f"The terminal preview is not supported")
 
     def save_display_movie_info(self):
         """Save a screenshot of the user's review"""
