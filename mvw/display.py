@@ -18,7 +18,7 @@ import os
 import sys
 import io
 
-console = Console(force_terminal=True, width=95, soft_wrap=True, color_system="truecolor", legacy_windows=False)
+console = Console(force_terminal=True, soft_wrap=True, color_system="truecolor", legacy_windows=False)
 config_manager = ConfigManager()
 path = PathManager()
 moai = Moai()
@@ -60,7 +60,7 @@ class DisplayManager:
             poster_panel = self.poster_panel()
 
             review_header = Text.from_markup(f"[{str(palette.style.get('review_text', 'cyan'))} bold]󰭹 {reviewer_name.upper()}{suffix} REVIEW :[/] [{str(palette.style.get('imdb_gold', 'yellow'))}]{self.iconize_star(float(star))}[/]")
-            review = Text.from_markup(review_text if review_text != None else "Seems like something [italic]happened[/], Sorry for the inconvenience.", overflow="fold", justify="full", style=str(palette.style.get('text', 'white')))
+            review = Text.from_markup(review_text if review_text != None else "Seems like something [italic]happened[/], Sorry for the inconvenience.", overflow="fold", justify="left", style=str(palette.style.get('text', 'white')))
             gap = Text.from_markup(" ")
 
             review_group = Group(
@@ -129,7 +129,8 @@ class DisplayManager:
                 command,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
+                encoding='utf-8',
             )
 
             console = Console(record=True, width=100)
