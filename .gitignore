@@ -11,3 +11,6 @@ wheels/
 
 # Placeholder movie
 mvw/test.py
+
+# My personal gh command reminder step
+gh.md
