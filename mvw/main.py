@@ -10,6 +10,7 @@ from .movie import MovieManager
 from .database import DatabaseManager
 from .moai import Moai
 from .api import API
+from .menu import MenuManager
 
 app = typer.Typer(help="MVW - CLI MoVie revieW", context_settings={"help_option_names" : ["-h", "--help"]})
 
@@ -18,6 +19,7 @@ movie_manager = MovieManager()
 database_manager = DatabaseManager()
 moai = Moai()
 console = Console()
+menu = MenuManager()
 
 @app.command()
 def config(
@@ -112,7 +114,7 @@ def edit(
         display_manager.display_movie_info(movie['star'], movie['review'])
 
         moai.says(
-            f"Seems like your past rating is {movie['star']}."
+            f"Seems like your past rating is {movie['star']}.\n"
             f"Press [yellow]ENTER[/] if want to skip it"
         )
 
@@ -125,9 +127,9 @@ def edit(
         )
         
         moai.says(
-            f"Seems like you have already reviewed {movie['title']}, so I recommend\n"
-            "for you to [cyan]re-edit[/] using your [italic]default text editor[/]\n"
-            "as you won't need to write them from [indian_red italic]scratch..[/]"
+            f"Seems like you have already reviewed [yellow]\"{movie['title']}\"[/],\n"
+            "I recommend for you to [cyan]re-edit[/] using your [italic]default text editor[/]\n"
+            "so you won't need to write them from [indian_red italic]scratch..[/]"
         )
 
         use_text_editor = click.confirm(
@@ -249,8 +251,6 @@ def interactive(title: str):
                     "       [sky_blue2 underline]http://www.omdbapi.com/apikey.aspx[/]\n"
                     "             [dim]Try CTRL+left_click ^[/]", moai="big")
 
-
-
 @app.command()
 def list():
     """List all the reviewed movies"""
@@ -266,19 +266,17 @@ def list():
     )
 
     if selected_title:
-        movie = movie_map[selected_title]
-        moai.says("Do you want to have an [cyan]\"image\"[/] of your review?\nTo change theme, try [yellow]`mvw config -t <THEME>`[/]")
-        screenshot = click.confirm(
-            "MVW   (.svg)",
-            default=False,
-            prompt_suffix="?",
-            show_default=True
-        )
+        metadata = movie_map.get(selected_title)
+        imdbid: str = str(metadata.get('imdbid'))
 
-        if screenshot:
-            save(movie,movie['poster_local_path'])
-        else:
-            DisplayManager(movie, movie['poster_local_path']).display_movie_info(movie['star'], movie['review'])
+        movie = database_manager.get_movie_metadata_by_imdbid(imdbid)
+
+        menu.add_feature("Preview", preview, imdbid=imdbid)
+        menu.add_feature("Delete", delete, imdbid=imdbid)
+        menu.add_feature("Edit", edit, movie=movie, poster_path=movie['poster_local_path'], already_reviewed=True)
+        menu.add_feature("Save", save, movie=movie, poster_local_path=movie['poster_local_path'])
+
+        menu.run(imdbid=imdbid)
 
 @app.command()
 def preview(
