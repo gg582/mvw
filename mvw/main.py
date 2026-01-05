@@ -251,7 +251,6 @@ def interactive(title: str):
                     "       [sky_blue2 underline]http://www.omdbapi.com/apikey.aspx[/]\n"
                     "             [dim]Try CTRL+left_click ^[/]", moai="big")
 
-
 @app.command()
 def list():
     """List all the reviewed movies"""
@@ -275,6 +274,7 @@ def list():
         menu.add_feature("Preview", preview, imdbid=imdbid)
         menu.add_feature("Delete", delete, imdbid=imdbid)
         menu.add_feature("Edit", edit, movie=movie, poster_path=movie['poster_local_path'], already_reviewed=True)
+        menu.add_feature("Save", save, movie=movie, poster_local_path=movie['poster_local_path'])
 
         menu.run(imdbid=imdbid)
 
