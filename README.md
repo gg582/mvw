@@ -25,7 +25,7 @@
 
 ---
 
-<img src="https://raw.githubusercontent.com/fatinul/mvw/v0.1.0/images/welcome.png" align="center">
+<img src="https://raw.githubusercontent.com/fatinul/mvw/latest/images/welcome.png" align="center">
 
 ```
   ▁▁     ╭─────────────────────────────────────╮
@@ -36,17 +36,17 @@
 ### Interactive
 Default usage where you will get to experience the full experience of MVW. You will get to search, rate, review and also save your review. Every reviews will be saved in your local machine!
 
-![Interactive Command](https://raw.githubusercontent.com/fatinul/mvw/v0.1.0/demos/demo-interactive.gif)
+![Interactive Command](https://raw.githubusercontent.com/fatinul/mvw/latest/demos/demo-interactive.gif)
 
 ### List
 You will get to see every past reviews that you had done in a simple interface supported by [iterfzf](https://github.com/dahlia/iterfzf)) which uses the "__Fuzzy Search__"
 
-![List Command](https://raw.githubusercontent.com/fatinul/mvw/v0.1.0/demos/demo-list.gif)
+![List Command](https://raw.githubusercontent.com/fatinul/mvw/latest/demos/demo-list.gif)
 
 ### Config
 Everything that you can see in the config list can be configurable. From the poster_width, theme, your name, and even worldwide-boxoffice feature
 
-![Config Command](https://raw.githubusercontent.com/fatinul/mvw/v0.1.0/demos/demo-config.gif)
+![Config Command](https://raw.githubusercontent.com/fatinul/mvw/latest/demos/demo-config.gif)
 
 ### Theme
 
@@ -54,13 +54,13 @@ Everything that you can see in the config list can be configurable. From the pos
 > You can see `svg` below if it is _supported_.
 
 - Gruvbox (The Default Theme)
-![Gruvbox](https://raw.githubusercontent.com/fatinul/mvw/v0.1.0/images/gruvbox.svg)
+![Gruvbox](https://raw.githubusercontent.com/fatinul/mvw/latest/images/gruvbox.svg)
 
 - Catppuccin
-![Catpuccin](https://raw.githubusercontent.com/fatinul/mvw/v0.1.0/images/catppuccin.svg)
+![Catpuccin](https://raw.githubusercontent.com/fatinul/mvw/latest/images/catppuccin.svg)
 
 - Nord
-![Nord](https://raw.githubusercontent.com/fatinul/mvw/v0.1.0/images/nord.svg)
+![Nord](https://raw.githubusercontent.com/fatinul/mvw/latest/images/nord.svg)
 ---
 
 ## Features
@@ -68,11 +68,13 @@ Everything that you can see in the config list can be configurable. From the pos
 | Features | Notes |
 | :----- | :------ |
 | **Auto fetch movie data** | Uses [OMDb API](http://www.omdbapi.com/apikey.aspx) behind the hood to fetch movie data fast |
+| **Search movies** | Just give the movie title or imdbid to fetch the movie (no more EXACT) |
+| **Menu** | List every accessible feature when selected after `mvw list` |
 | **Pixelated poster** | Unique way to view the poster __(fully intentional)__ |
 | **Configurable poster size** | Can change the poster width |
 | **Review history** | All review are saved in a database |
 | **Autocomplete** | Provided by the Typer library |
-| **Themes** | Gruvbox, Catppuccino, Nord |
+| **Themes** | Gruvbox, Catppuccin, Nord |
 | **Save Review** | The review can be saved in svg format with the theme |
 | **Worldwide Boxoffice** | Use webscrap tech to find the global box office |
 | **Half-star Rating** | Support 0.5 star rating |
@@ -98,6 +100,8 @@ At first, as someone like me whose personality (TUI + Movie) will obviously crea
 So instead I just want to make something different and that's where I (finally) remember about my Obsidian movie catalogue. Then the code begins..
 
 And _also_, I just want to learn new things :)
+
+Can check my personal blog for more info -> [here](https://fa.tinul.net/blog/build-mvw)
  
 ---
 
@@ -180,11 +184,11 @@ It is just a console.print that I decided to add a face. I choose Moai because, 
 
 ## Inspiration
 
-mvw is built with [Typer](https://github.com/Textualize/textual) and inspired by:
+mvw is built with [Typer](https://github.com/Textualize/textual) + [iterfzf](https://github.com/dahlia/iterfzf) and inspired by:
 - [fastfetch](https://github.com/fastfetch-cli/fastfetch) - Visual system information Display.
 
 ---
 
 ## License
 
-MIT
+GPL-3.0

@@ -27,7 +27,7 @@ def config(
     name: Optional[str] = typer.Option(None, "--name", "-n", help="Set your name as the reviewer"),
     poster_width: Optional[str] = typer.Option(None, "--poster-width", "-w", help="Set the poster width (default: 30)"),
     theme: Optional[str] = typer.Option(None, "--theme", "-t", help="Set the color, OPTS:\n"
-                                        "(gruvbox, catpuccino, nord)"
+                                        "(gruvbox, catppuccin, nord)"
                                         ),
     moai_says: Optional[bool] = typer.Option(None, "--moai", "-m", help="Toggle the Moai help", show_default=False),
     review: Optional[bool] = typer.Option(None, "--review", "-rv", help="Toggle the Review section", show_default=False),
