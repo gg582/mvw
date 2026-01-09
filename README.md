@@ -73,6 +73,7 @@ Everything that you can see in the config list can be configurable. From the pos
 | **Menu** | List every accessible feature when selected after `mvw list` |
 | **Change poster** | Change the default poster after fetch |
 | **Pixelated poster** | Unique way to view the poster __(fully intentional)__ |
+| **Transparent support** | Transparent background from png or webp are supported  |
 | **Configurable poster size** | Can change the poster width |
 | **Review history** | All review are saved in a database |
 | **Autocomplete** | Provided by the Typer library |
