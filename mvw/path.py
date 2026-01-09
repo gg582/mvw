@@ -23,16 +23,21 @@ class PathManager:
 
     def image_picker(self):
         home = Path.home()
-        valid_extensions = {'.jpg', '.jpeg', '.png', '.webp'}
 
-        def image_generator():
+        def images_path():
             for root, dirs, files in os.walk(home):
                 # Skip hidden directories
                 dirs[:] = [d for d in dirs if not d.startswith('.')]
                 for file in files:
-                    if Path(file).suffix.lower() in valid_extensions:
+                    if self.valid_image_path(file):
                         yield os.path.join(root, file)
 
-        selected = iterfzf(image_generator(), header="Choose your image")
+        selected = iterfzf(images_path(), header="Choose your image")
         return selected
 
+    def valid_image_path(self, file):
+        valid_extensions = {'.jpg', '.jpeg', '.png', '.webp'}
+        if Path(file).suffix.lower() in valid_extensions:
+            return True
+        else:
+            return False

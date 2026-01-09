@@ -3,6 +3,7 @@ import click
 from iterfzf import iterfzf
 from rich.console import Console
 from typing import Optional
+from pathlib import Path
 
 from .config import ConfigManager
 from .display import DisplayManager
@@ -300,19 +301,32 @@ def poster(
         moai.says("Choose either [cyan]id[/] or [indian_red]title[/], try [yellow]`poster -h`[/]")
         return
 
-    attribute = "poster_local_path"
+    if path.valid_image_path(poster_path):
+        attribute = "poster_local_path"
+        if imdbid:
+            if not poster_path:
+                new_poster_path = str(path.image_picker())
+            else:
+                new_poster_path = poster_path
 
-    if imdbid:
-        if not poster_path:
+            if not Path(new_poster_path).exists():
+                moai.says(
+                    f"[indian_red]x Sorry, ({new_poster_path}) is [italic]not exist.[/]"
+                )
+                return
+
+            database_manager.set_key_value(imdbid, attribute, new_poster_path)
+            preview(imdbid=imdbid)
+        elif title:
             new_poster_path = str(path.image_picker())
-        else:
-            new_poster_path = poster_path
-        database_manager.set_key_value(imdbid, attribute, new_poster_path)
-        preview(imdbid=imdbid)
-    elif title:
-        new_poster_path = str(path.image_picker())
-        database_manager.set_key_value(title, attribute, new_poster_path)
-        preview(title=title)
+            database_manager.set_key_value(title, attribute, new_poster_path)
+            preview(title=title)
+    else:
+        moai.says(
+            f"[indian_red]x Sorry, ({Path(poster_path).name}) is [italic]unsupported.[/][/]\n"
+                "[dim]Supported: .jpg, .jpeg, .png, .webp[/]"
+        )
+        return
 
 @app.command()
 def preview(
