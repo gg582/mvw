@@ -147,100 +147,6 @@ class TerminalImageRenderer:
         except Exception:
             self.failed = True
 
-    # def __rich_console__(self, console, options):
-    #     try:
-    #         if not self.image_path.exists():
-    #             self.failed = True
-    #             return
-    #
-    #         img = Image.open(self.image_path).convert("RGBA")
-    #
-    #         if img.width == 0 or img.height == 0:
-    #             self.failed = True
-    #             return
-    #
-    #         r, g, b, a = img.split()
-    #         rgb = Image.merge("RGB", (r, g, b))
-    #         enhancer = ImageEnhance.Sharpness(rgb)
-    #         rgb = enhancer.enhance(2.5)
-    #         # enhancer = ImageEnhance.Contrast(img)
-    #         # img = enhancer.enhance(1.2)
-    #         img = Image.merge("RGBA", (r, g, b, a))
-    #
-    #         target_width = self.width * 2
-    #         effective_img_aspect = img.width / img.height * 2.3
-    #         new_width = target_width
-    #         new_height = int(target_width / effective_img_aspect)
-    #
-    #         if new_width % 2 != 0: new_width -= 1
-    #         if new_height % 2 != 0: new_height -= 1
-    #
-    #         if new_width <= 0 or new_height <= 0:
-    #             self.failed = True
-    #             return
-    #
-    #         img = img.resize((new_width, new_height), Image.Resampling.BILINEAR)
-    #         arr = np.array(img, dtype=np.float32)
-    #
-    #         quadrants = [' ', '▘', '▝', '▀', '▖', '▌', '▞', '▛', '▗', '▚', '▐', '▜', '▄', '▙', '▟', '█']
-    #         output_lines = []
-    #
-    #         for y in range(0, new_height, 2):
-    #             line_parts = []
-    #             for x in range(0, new_width, 2):
-    #                 block = arr[y:y+2, x:x+2]
-    #                 pixels_rgb = block[:,:,:3].reshape(-1, 3)
-    #                 pixels_alpha = block[:,:,3].reshape(-1)
-    #
-    #                 # avg = np.mean(pixels, axis=0)
-    #                 # dists = np.sum((pixels - avg)**2, axis=1)
-    #                 # c1 = pixels[np.argmax(dists)]
-    #                 # c2 = avg
-    #                 #
-    #                 # for _ in range(2):
-    #                 #     d1 = np.sum((pixels - c1)**2, axis=1)
-    #                 #     d2 = np.sum((pixels - c2)**2, axis=1)
-    #                 #     mask = d1 > d2
-    #                 #
-    #                 #     if np.any(~mask): c1 = np.mean(pixels[~mask], axis=0)
-    #                 #     if np.any(mask): c2 = np.mean(pixels[mask], axis=0)
-    #                 #
-    #                 # d1 = np.sum((pixels - c1)**2, axis=1)
-    #                 # d2 = np.sum((pixels - c2)**2, axis=1)
-    #                 # mask = d1 > d2
-    #                 mask = pixels_alpha > 128
-    #
-    #                 if not np.all(mask):
-    #                     # fg, bg = c2.astype(int), c2.astype(int)
-    #                     fg, bg = [0,0,0],[0,0,0]
-    #                     char_idx = 0
-    #                     # char_idx = 15
-    #                 elif np.all(~mask):
-    #                     # fg, bg = c1.astype(int), c1.astype(int)
-    #                     char_idx = 15
-    #                 else:
-    #                     fg, bg = c2.astype(int), c1.astype(int)
-    #                     q_val = 0
-    #                     if mask[0]: q_val += 1
-    #                     if mask[1]: q_val += 2
-    #                     if mask[2]: q_val += 4
-    #                     if mask[3]: q_val += 8
-    #                     char_idx = q_val
-    #
-    #                 char = quadrants[char_idx]
-    #                 line_parts.append(f"\033[38;2;{fg[0]};{fg[1]};{fg[2]}m\033[48;2;{bg[0]};{bg[1]};{bg[2]}m{char}")
-    #
-    #             line_parts.append("\033[0m")
-    #             output_lines.append("".join(line_parts))
-    #
-    #         yield Text.from_ansi("\n".join(output_lines))
-    #
-    #     except Exception:
-    #         self.failed = True
-    #
-#_____
-
-
 console = Console(force_terminal=True, soft_wrap=True, color_system="truecolor", legacy_windows=False)
 config_manager = ConfigManager()
 path = PathManager()
@@ -420,6 +326,12 @@ class DisplayManager:
             "style": str(palette.style.get('poster_border', ''))
         }
 
+        if config_manager.get_config("UI", "poster_border") != "true":
+            panel_kwargs.update({
+                "box": box.SIMPLE_HEAD,
+                "subtitle": "",
+            })
+
         def placeholder_panel() -> Panel:
             placeholder_text = Align.center(
                 Text("No Poster", style=str(palette.style.get('text', 'white'))),
@@ -439,10 +351,9 @@ class DisplayManager:
         try:
             renderer = TerminalImageRenderer(poster_file, self.poster_width)
             test_panel = Panel(renderer, **panel_kwargs)
-            
+
             if renderer.failed:
                 return placeholder_panel()
-                
             return test_panel
         except Exception:
             return placeholder_panel()

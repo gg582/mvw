@@ -27,10 +27,11 @@ path = PathManager()
 def config(
     api_key: Optional[str] = typer.Option(None, "--api-key", "-k", help="Set OMDb API key"),
     name: Optional[str] = typer.Option(None, "--name", "-n", help="Set your name as the reviewer"),
-    poster_width: Optional[str] = typer.Option(None, "--poster-width", "-w", help="Set the poster width (default: 30)"),
     theme: Optional[str] = typer.Option(None, "--theme", "-t", help="Set the color, OPTS:\n"
                                         "(gruvbox, catppuccin, nord)"
                                         ),
+    poster_width: Optional[str] = typer.Option(None, "--poster-width", "-w", help="Set the poster width (default: 30)"),
+    poster_border: Optional[bool] = typer.Option(None, "--border", "-b", help="Toggle the Poster border visibility", show_default=False),
     moai_says: Optional[bool] = typer.Option(None, "--moai", "-m", help="Toggle the Moai help", show_default=False),
     review: Optional[bool] = typer.Option(None, "--review", "-rv", help="Toggle the Review section", show_default=False),
     worldwide_boxoffice: Optional[bool] = typer.Option(None, "--worldwide-boxoffice", "-wb", help="Toggle the boxoffice scope (worldwide vs domestic)", show_default=False),
@@ -88,6 +89,15 @@ def config(
             moai.says(f"[green]✓ Poster width ({poster_width}) [italic]resized[/italic] successfully[/]")
         except:
             moai.says(f"[indian_red]x Sorry, Poster Width cannot be other than [italic]whole number[/]\n[dim]                    P/S: no comma[/]")
+
+    if poster_border:
+        poster_border_bool = config_manager.get_config("UI", "poster_border").lower() == "true"
+        if poster_border_bool :
+            config_manager.set_config("UI", "poster_border", "false")
+            moai.says(f"[yellow]The poster border will be [italic]hidden[/]")
+        else:
+            moai.says(f"[green]The poster border will be [italic]shown[/]")
+            config_manager.set_config("UI", "poster_border", "true")
 
     if hide_key:
         hide_key_bool = config_manager.get_config("UI", "hide_key").lower() == "true"

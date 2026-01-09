@@ -36,6 +36,7 @@ class ConfigManager:
         self.config['UI'] = {
             'moai': 'true',
             'poster_width': '25',
+            'poster_border': 'true',
             'theme': 'gruvbox',
             'review': 'true',
             'hide_key': 'true',
