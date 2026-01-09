@@ -286,13 +286,13 @@ def list():
         menu.add_feature("Delete", delete, imdbid=imdbid)
         menu.add_feature("Edit", edit, movie=movie, poster_path=movie['poster_local_path'], already_reviewed=True)
         menu.add_feature("Save", save, movie=movie, poster_local_path=movie['poster_local_path'])
-        menu.add_feature("Change Poster", poster, imdbid=imdbid, poster_path = None)
+        menu.add_feature("Change Poster", poster, poster_path="", imdbid=imdbid)
 
         menu.run(imdbid=imdbid)
 
 @app.command()
 def poster(
-    poster_path: str,
+    poster_path: Optional[str] = typer.Option("", "--path", "-p", help="The file path of the poster"),
     imdbid: Optional[str] = typer.Option(None, "--id", "-i", help="Change the poster for movie with tmdbid (tt..)"),
     title: Optional[str] = typer.Option(None, "--title", "-t", help="Change the poster for movie with title (for now, need the exact title like in the review (case-sensitive))"),
 ):
@@ -301,29 +301,30 @@ def poster(
         moai.says("Choose either [cyan]id[/] or [indian_red]title[/], try [yellow]`poster -h`[/]")
         return
 
-    if path.valid_image_path(poster_path):
-        attribute = "poster_local_path"
+    attribute = "poster_local_path"
+    print(poster_path)
+    
+    if poster_path == "":
+        new_poster_path = path.image_picker()
+    else:
+        new_poster_path = poster_path
+
+    if not Path(str(new_poster_path)).exists():
+        moai.says(
+            f"[indian_red]x Sorry, ({new_poster_path}) is [italic]not exist.[/]"
+        )
+        return
+
+    if path.valid_image_path(str(new_poster_path)):
         if imdbid:
-            if not poster_path:
-                new_poster_path = str(path.image_picker())
-            else:
-                new_poster_path = poster_path
-
-            if not Path(new_poster_path).exists():
-                moai.says(
-                    f"[indian_red]x Sorry, ({new_poster_path}) is [italic]not exist.[/]"
-                )
-                return
-
             database_manager.set_key_value(imdbid, attribute, new_poster_path)
             preview(imdbid=imdbid)
         elif title:
-            new_poster_path = str(path.image_picker())
             database_manager.set_key_value(title, attribute, new_poster_path)
             preview(title=title)
     else:
         moai.says(
-            f"[indian_red]x Sorry, ({Path(poster_path).name}) is [italic]unsupported.[/][/]\n"
+            f"[indian_red]x Sorry, ({poster_path}) is [italic]unsupported.[/][/]\n"
                 "[dim]Supported: .jpg, .jpeg, .png, .webp[/]"
         )
         return
