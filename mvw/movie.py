@@ -68,20 +68,21 @@ class MovieManager:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
         }
 
-        try:
-            response = requests.get(url, headers=headers)
-            soup = BeautifulSoup(response.text, 'html.parser')
-            money_spans = soup.find_all("span", class_="money")
-            # On Box Office Mojo title pages:
-            # Index 0 is usually Domestic, Index 1 is International, Index 2 is Worldwide
-            if len(money_spans) >= 3:
-                return money_spans[2].text.strip()
-            elif len(money_spans) > 0:
-                # If the movie only has one total, it might be the Worldwide/Domestic total
-                return money_spans[-1].text.strip()
-            return None
-        except Exception as e:
-            moai.says(f"[indian_red]x Sorry, Web Scrapping Error ({e}) occured.[/]", type="error")
+        with console.status("[bold]Searching Box Office Data...", spinner="earth"):
+            try:
+                response = requests.get(url, headers=headers)
+                soup = BeautifulSoup(response.text, 'html.parser')
+                money_spans = soup.find_all("span", class_="money")
+                # On Box Office Mojo title pages:
+                # Index 0 is usually Domestic, Index 1 is International, Index 2 is Worldwide
+                if len(money_spans) >= 3:
+                    return money_spans[2].text.strip()
+                elif len(money_spans) > 0:
+                    # If the movie only has one total, it might be the Worldwide/Domestic total
+                    return money_spans[-1].text.strip()
+                return None
+            except Exception as e:
+                moai.says(f"[indian_red]x Sorry, Web Scrapping Error ({e}) occured.[/]", type="error")
 
     def fetch_poster(self):
         """Fetch movie poster and store in posters in data"""
