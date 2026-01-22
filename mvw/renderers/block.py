@@ -14,7 +14,6 @@ class BlockRenderer(BaseRenderer):
                 self.failed = True
                 return
 
-            # Use rich_pixels.Pixels for block-based rendering
             pixels = Pixels.from_image_path(
                 path=str(self.image_path),
                 resize=[poster_width, poster_height] # pyright: ignore

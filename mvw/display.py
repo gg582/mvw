@@ -114,8 +114,8 @@ class DisplayManager:
                 type="nerd",
             )
             os.abort()
-        except Exception:
-            print(f"The terminal preview is not supported")
+        except Exception as e:
+            print(f"The terminal preview is not supported: {e}")
 
     def save_display_movie_info(self):
         """Save a screenshot of the user's review"""
