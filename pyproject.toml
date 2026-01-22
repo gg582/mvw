@@ -30,6 +30,7 @@ dependencies = [
     "typer>=0.21.0",
     "Pillow>=10.0.0",
     "numpy>=1.24.0",
+    "asciify-them>=1.0.4",
 ]
 
 [project.urls]
