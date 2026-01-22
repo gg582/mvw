@@ -65,13 +65,7 @@ def config(
         None, "--hide-key", "-hk", help="Hide the api key", show_default=False
     ),
     render: Optional[str] = typer.Option(
-        None, "--render", "-r", help="Set render style (pixel, block, ascii, simple)"
-    ),
-    block_poster_width: Optional[str] = typer.Option(
-        None,
-        "--block-poster-width",
-        "-bw",
-        help="Set the block poster width (default: 30)",
+        None, "--render", "-r", help="Set render style (pixel, block, ascii)"
     ),
     reset: bool = typer.Option(
         False, "--reset", "-R", help="Reset the config into default configuration"
@@ -190,20 +184,6 @@ def config(
         else:
             moai.says(
                 f"[yellow]x Sorry, '{render}' is not a valid render style.\n[dim]Available options: {', '.join(available_renderers)}[/]",
-                type="nerd",
-            )
-
-    if block_poster_width:
-        try:
-            int(block_poster_width)
-            config_manager.set_config("UI", "block_poster_width", block_poster_width)
-            moai.says(
-                f"[green]✓ Block poster width ({block_poster_width}) [italic]resized[/italic] successfully[/]",
-                type="fun",
-            )
-        except:
-            moai.says(
-                f"[yellow]x Based on my calculation, [bold]Block Poster Width[/bold] cannot be other than a [italic]whole number[/]\n[dim]                   P/S: no comma, fraction or decimal[/]",
                 type="nerd",
             )
 
