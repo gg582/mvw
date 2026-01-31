@@ -388,7 +388,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "asciify-them", specifier = ">=1.0.4" },
+    { name = "asciify-them", specifier = ">=1.1.0" },
     { name = "bs4", specifier = ">=0.0.2" },
     { name = "iterfzf", specifier = ">=1.8.0.62.0" },
     { name = "numpy", specifier = ">=1.24.0" },
